@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +21,7 @@ interface CartItem extends Product {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -212,8 +214,9 @@ const Index = () => {
             {filteredProducts.map((product, index) => (
               <Card
                 key={product.id}
-                className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-scale-in"
+                className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-scale-in cursor-pointer"
                 style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => navigate(`/product/${product.id}`)}
               >
                 <CardHeader className="p-0">
                   <div className="relative aspect-square overflow-hidden">
@@ -239,7 +242,10 @@ const Index = () => {
                 <CardFooter className="p-6 pt-0">
                   <Button
                     className="w-full gradient-purple-pink text-white font-semibold"
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
                   >
                     <Icon name="ShoppingCart" size={18} className="mr-2" />
                     В корзину
